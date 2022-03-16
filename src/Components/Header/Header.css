@@ -1,0 +1,23 @@
+header{
+    background-color: black;
+}
+
+.navbar{
+    background-color: black;
+    padding: 1.1rem;
+
+}
+
+.navbar-brand{
+    font-size: 2rem;
+}
+
+.navbar-nav .nav-link {
+    font-size: 1.5rem;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.nav-item{
+    margin: 0 2rem;
+}

@@ -1,4 +1,5 @@
 import './Header.css'
+import logo from './Logo.png'
 function Header() {
     return (
         <header>
@@ -9,6 +10,8 @@ function Header() {
                             <div class="container-fluid ok">
                                 <a class="navbar-brand text-white text-uppercase ml-5" href="#">
                                     Campus Recruitment System
+
+                                    {/* <img src={logo} alt="logoimg" style={{width:"60px"}}/> */}
                                 </a>
                                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                     <span class="navbar-toggler-icon" style={{ color: "white !important" }}></span>

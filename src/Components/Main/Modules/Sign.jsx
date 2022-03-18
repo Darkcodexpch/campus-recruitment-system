@@ -30,7 +30,7 @@ export default function Sign() {
                                 </div>
                             </div>
 
-                            <p className='my-3'>Dont have account?<a href='#'>Register Here</a> </p>
+                            <p className='my-3'>Dont have account?<a href='#'>  Register Here</a> </p>
                         </form>
                  
                     </div>

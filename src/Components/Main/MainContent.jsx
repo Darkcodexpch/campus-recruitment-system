@@ -1,8 +1,35 @@
 import './MainContain.css'
-
+import Header from '../Header/Header'
+import { Link } from 'react-router-dom'
 export default function MainContent() {
   return (
-    <main>
+    <>
+      <Header />
+      <div className="container mt-5">
+        <div className="row d-flex justify-content-center shadow-sm py-5">
+          <div className="col-md-12 py-3">
+            <div className="head">
+              Campus recuirment System
+            </div>
+            <div className="pera">
+              Closing in on a decade of client-side routing, React Router v6 takes the best features from previous versions—and its sister project, Reach Router—in our smallest and most powerful package yet.
+            </div>
+            <div className="btnn">
+              <Link to="About">
+                <button className='btn btn-primary'>About us</button>
+              </Link>
+              <Link to="Signin">
+                <button className='btn btn-primary'>Sign in</button>
+              </Link>
+
+
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+      {/* <main>
     <div className='container'>
       <div className='row d-flex text-canter'>
         <div className='col-sm-12 col-md-12 col-lg-12'>
@@ -26,6 +53,7 @@ export default function MainContent() {
       </div>
 
     </div>
-    </main>
+    </main> */}
+    </>
   )
 }

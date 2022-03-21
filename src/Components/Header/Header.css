@@ -1,23 +1,16 @@
-header{
-    background-color: black;
+.ulnav{
+    list-style: none;
+    
 }
 
-.navbar{
-    background-color: black;
-    padding: 1.1rem;
-
+.ulnav li {
+    display: inline-block;
+    margin: 0px 10px;
+    cursor: pointer;
 }
 
-.navbar-brand{
-    font-size: 2rem;
-}
-
-.navbar-nav .nav-link {
-    font-size: 1.5rem;
-    padding-right: 0;
-    padding-left: 0;
-}
-
-.nav-item{
-    margin: 0 2rem;
+.ulnav li:hover{
+    border-bottom: 1px solid orange;
+    padding: 2px;
+    transition: all .5s;
 }

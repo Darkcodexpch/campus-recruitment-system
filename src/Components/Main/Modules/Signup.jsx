@@ -1,6 +1,8 @@
 import './Signup.css'
 import img from '../../Header/Logo.png'
+import Header from '../../Header/Header'
 import { db, auth } from '../../../Firebaseconf'
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 export default function Signup() {
     const [name, setName] = useState('')
@@ -10,10 +12,10 @@ export default function Signup() {
 
     let formHandler = (e) => {
         e.preventDefault()
-        if(name === '' || email ===''|| password ===''||type===''){
+        if (name === '' || email === '' || password === '' || type === '') {
             alert("Please enter Details Properly")
         }
-        else{
+        else {
             let user = {
                 name,
                 email,
@@ -26,15 +28,15 @@ export default function Signup() {
                     // Signed in 
                     let uid = userCredential.user.uid
                     console.log("Current Uid", uid)
-                    if(user.type ==="1"){
+                    if (user.type === "1") {
                         db.ref('/').child('users/StudentData').child(uid).set(user)
-                    alert("Student Signup suuccessfully")
-                    setName(' ')
-                    setEmail(' ')
-                    setPassword(' ')
-                    setType(' ')
+                        alert("Student Signup suuccessfully")
+                        setName(' ')
+                        setEmail(' ')
+                        setPassword(' ')
+                        setType(' ')
                     }
-                    else if(user.type ==="2"){
+                    else if (user.type === "2") {
                         db.ref('/').child('users/CompanyData').child(uid).set(user)
                         alert("Company Signup suuccessfully")
                         setName(' ')
@@ -43,14 +45,15 @@ export default function Signup() {
                         setType(' ')
                     }
                 })
-                .catch((error) => { console.log(error.message)
+                .catch((error) => {
+                    console.log(error.message)
                 });
 
         }
     }
 
     return (
-        <section className='Form my-4 mx-5'>
+        <><Header /><section className='Form my-4 mx-5'>
             <div className='container'>
                 <div className='row no-gutters signuprow'>
                     <div className='col-lg-5'>
@@ -80,7 +83,7 @@ export default function Signup() {
                             <div className='form-row'>
                                 <div className='col-lg-7'>
                                     {/* <label for="disabledSelect" class="form-label form-control my-3 p-3">Choose Account Type</label> */}
-                                    <select id="disabledSelect" class="form-select form-control my-3 p-3" value={type} onChange={(e) => { setType(e.target.value) }} >
+                                    <select id="disabledSelect" class="form-select form-control my-3 p-3" value={type} onChange={(e) => { setType(e.target.value) }}>
                                         <option>Choose Account type</option>
                                         <option value="1">Student</option>
                                         <option value="2">Company</option>
@@ -95,7 +98,7 @@ export default function Signup() {
                                 </div>
                             </div>
 
-                            <p className='my-3'>have an account? <a href='#'>Login Here</a> </p>
+                            <p className='my-3'>have an account? <Link to="/Signin">Login Here</Link></p>
                         </form>
 
                     </div>
@@ -104,7 +107,7 @@ export default function Signup() {
 
             </div>
 
-        </section>
+        </section></>
 
     )
 }

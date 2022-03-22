@@ -1,16 +1,19 @@
 .ulnav{
     list-style: none;
+    margin-left: 300px;
     
 }
 
 .ulnav li {
     display: inline-block;
-    margin: 0px 10px;
+    margin: 0px 20px;
     cursor: pointer;
+    color: white;
 }
 
+
 .ulnav li:hover{
-    border-bottom: 1px solid orange;
+    border-bottom: 2px solid orange;
     padding: 2px;
     transition: all .5s;
 }

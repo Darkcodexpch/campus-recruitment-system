@@ -10,6 +10,7 @@ export default function Main() {
 
     <BrowserRouter>
       <Routes>
+
         <Route path="/" element={<MainContent />}></Route>
         <Route path="/Signin" element={<Sign />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>

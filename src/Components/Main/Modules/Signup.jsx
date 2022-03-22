@@ -27,23 +27,30 @@ export default function Signup() {
                     console.log(userCredential)
                     // Signed in 
                     let uid = userCredential.user.uid
-                    console.log("Current Uid", uid)
-                    if (user.type === "1") {
-                        db.ref('/').child('users/StudentData').child(uid).set(user)
-                        alert("Student Signup suuccessfully")
-                        setName(' ')
-                        setEmail(' ')
-                        setPassword(' ')
-                        setType(' ')
-                    }
-                    else if (user.type === "2") {
-                        db.ref('/').child('users/CompanyData').child(uid).set(user)
-                        alert("Company Signup suuccessfully")
-                        setName(' ')
-                        setEmail(' ')
-                        setPassword(' ')
-                        setType(' ')
-                    }
+                     // console.log("get Current Uid", uid)
+                    // if (user.type === "1") {
+                    //     db.ref('/').child('users/StudentData').child(uid).set(user)
+                    //     alert("Student Signup suuccessfully")
+                    //     setName(' ')
+                    //     setEmail(' ')
+                    //     setPassword(' ')
+                    //     setType(' ')
+                    // }
+                    // else if (user.type === "2") {
+                    //     db.ref('/').child('users/CompanyData').child(uid).set(user)
+                    //     alert("Company Signup suuccessfully")
+                    //     setName(' ')
+                    //     setEmail(' ')
+                    //     setPassword(' ')
+                    //     setType(' ')
+                    // }
+
+                        db.ref('/').child('users').child(uid).set(user)
+                        alert("Signup succesfully")
+                        setName('')
+                        setEmail('')
+                        setPassword('')
+                        setType('')
                 })
                 .catch((error) => {
                     console.log(error.message)

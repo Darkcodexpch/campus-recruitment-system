@@ -7,9 +7,10 @@ import { useState } from 'react'
 export default function Sign() {
     const [Email,setEmail] = useState('');
     const [password,setPassword] = useState('')
-    const [data,setData] = useState('');
-
-    console.log(data);
+    const [loginData,setLoginData] = useState('');
+    if(loginData !== ""){
+        localStorage.setItem("logindata",JSON.stringify(loginData))
+    }
     const loginHandler = (e)=>{
         e.preventDefault();
 
@@ -24,7 +25,8 @@ export default function Sign() {
     console.log(user)
     db.ref().child("users").child(user.uid).get().then((snapshot) => {
         if (snapshot.exists()) {
-          setData([snapshot.val()])
+            setLoginData([snapshot.val()]
+            )
         } else {
           console.log("No data available");
         }

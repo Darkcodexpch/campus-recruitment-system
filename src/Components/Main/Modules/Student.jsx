@@ -1,5 +1,30 @@
+import { useState } from 'react'
+import { db } from '../../../Firebaseconf';
 import './Student.css'
 export default function Student() {
+const [semester,setSemester] = useState('');
+const [cgpa,setCgpa] = useState('');
+const [github,setGihub] = useState('');
+const [image,setImage] = useState();
+
+const addStudentHandler=(e)=>{
+    e.preventDefault();
+    const studentData = {
+        semester,
+        cgpa,
+        github,
+        image
+    }
+    db.ref("users").child(`ju6XwgvBYLaJl2vQBbQflPkhBAI2`).update({semester,cgpa,github,image}).then(() => {
+        alert("Data Updated")
+
+    })
+
+    console.log(studentData);
+
+}
+
+console.log(image);
   return (
     <div className='container'>
         <div className='row'>
@@ -10,40 +35,34 @@ export default function Student() {
 
         <div className='row'>
             <div className='col-md-12 d-flex justify-content-center'>
-            <form className='px-5 pt-5'>
+            <form className='px-5 pt-5' onSubmit={addStudentHandler}>
                             {/* <h1 className='font-weight-bold py-3'>Logo</h1> */}
                             <h4 className='font-weight-bold py-3'>Enter Your details</h4>
                             <div className='form-row'>
                                 <div className='col-lg-12'>
-                                    <input type="text" placeholder='Enter your semester' className='form-control my-3 p-3'/>
+                                    <input type="number" placeholder='Enter your semester' className='form-control my-3 p-3' value={semester} onChange={(e)=>{setSemester(e.target.value)}}/>
                                 </div>
                             </div>
                             <div className='form-row'>
                                 <div className='col-lg-12'>
-                                    <input type="text" placeholder='Enter your last cgpa' className='form-control my-3 p-3'/>
+                                    <input type="number" placeholder='Enter your last cgpa' className='form-control my-3 p-3' value={cgpa} onChange={(e)=>{setCgpa(e.target.value)}}/>
                                 </div>
                             </div>
                             <div className='form-row'>
                                 <div className='col-lg-12'>
-                                    <input type="text" placeholder='Enter your expreince in mern stack' className='form-control my-3 p-3'/>
-                                </div>
-                            </div>
-
-                            <div className='form-row'>
-                                <div className='col-lg-12'>
-                                    <input type="text" placeholder='Provide your github best repo' className='form-control my-3 p-3'/>
+                                    <input type="text" placeholder='Provide your github best repo' className='form-control my-3 p-3' value={github} onChange={(e)=>{setGihub(e.target.value)}}/>
                                 </div>
                             </div>
                             <div className='form-row'>
                                 <div className='col-lg-12'>
                                 <label for="imggg" class="form-label">submit your resume</label>
-                                    <input type="file" className='form-control my-3 p-3 imggg'/>
+                                    <input type="file" className='form-control my-3 p-3 imggg' value={undefined} onChange={(e)=>{setImage(e.target.files[0])}}/>
                                 </div>
                             </div>
 
                             <div className='form-row'>
                                 <div className='col-lg-12'>
-                                    <button type='button' className='btn1'>submit details</button>
+                                    <button  className='btn1'>submit details</button>
                                 </div>
                             </div>
                         </form>

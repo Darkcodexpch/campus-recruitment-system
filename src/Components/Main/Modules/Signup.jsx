@@ -2,14 +2,15 @@ import './Signup.css'
 import img from '../../Header/Logo.png'
 import Header from '../../Header/Header'
 import { db, auth } from '../../../Firebaseconf'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 export default function Signup() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [type, setType] = useState('')
-
+    const [status,setStatus] = useState(false);
+    const navigate = useNavigate()
     let formHandler = (e) => {
         e.preventDefault()
         if (name === '' || email === '' || password === '' || type === '') {
@@ -20,14 +21,15 @@ export default function Signup() {
                 name,
                 email,
                 password,
-                type
+                type,
+                status
             }
             auth.createUserWithEmailAndPassword(user.email, user.password)
                 .then((userCredential) => {
                     console.log(userCredential)
                     // Signed in 
                     let uid = userCredential.user.uid
-                     // console.log("get Current Uid", uid)
+                    // console.log("get Current Uid", uid)
                     // if (user.type === "1") {
                     //     db.ref('/').child('users/StudentData').child(uid).set(user)
                     //     alert("Student Signup suuccessfully")
@@ -45,12 +47,13 @@ export default function Signup() {
                     //     setType(' ')
                     // }
 
-                        db.ref('/').child('users').child(uid).set(user)
-                        alert("Signup succesfully")
-                        setName('')
-                        setEmail('')
-                        setPassword('')
-                        setType('')
+                    db.ref('/').child('users').child(uid).set(user)
+                    alert("Signup succesfully")
+                    setName('')
+                    setEmail('')
+                    setPassword('')
+                    setType('')
+                    navigate('/Signin')
                 })
                 .catch((error) => {
                     console.log(error.message)

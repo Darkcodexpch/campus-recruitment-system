@@ -1,30 +1,28 @@
 import { useState } from 'react'
-import { db } from '../../../Firebaseconf';
+import { db , storageRef } from '../../../Firebaseconf';
 import './Student.css'
 export default function Student() {
 const [semester,setSemester] = useState('');
 const [cgpa,setCgpa] = useState('');
 const [github,setGihub] = useState('');
 const [image,setImage] = useState();
-
+// get login data from database
+let studentDatabaseData= JSON.parse(localStorage.getItem("logindata"));
 const addStudentHandler=(e)=>{
     e.preventDefault();
     const studentData = {
         semester,
         cgpa,
         github,
-        image
+        image,
+        value:true
     }
-    db.ref("users").child(`ju6XwgvBYLaJl2vQBbQflPkhBAI2`).update({semester,cgpa,github,image}).then(() => {
+    let myData = {...studentData,...studentDatabaseData[0]}
+    db.ref("users").child(`${studentDatabaseData[0].uid}`).update(myData).then(() => {
         alert("Data Updated")
 
     })
-
-    console.log(studentData);
-
 }
-
-console.log(image);
   return (
     <div className='container'>
         <div className='row'>
@@ -32,11 +30,9 @@ console.log(image);
            <h1>Student portal</h1>
             </div>
         </div>
-
         <div className='row'>
             <div className='col-md-12 d-flex justify-content-center'>
             <form className='px-5 pt-5' onSubmit={addStudentHandler}>
-                            {/* <h1 className='font-weight-bold py-3'>Logo</h1> */}
                             <h4 className='font-weight-bold py-3'>Enter Your details</h4>
                             <div className='form-row'>
                                 <div className='col-lg-12'>
@@ -66,10 +62,7 @@ console.log(image);
                                 </div>
                             </div>
                         </form>
-
             </div>
-
         </div>
-
     </div>  )
 }

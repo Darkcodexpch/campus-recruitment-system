@@ -1,15 +1,17 @@
 import Header from '../../Header/Header'
 import './Sign.css'
-import { Link } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import { db, auth } from '../../../Firebaseconf'
 import img from '../../Header/Logo.png'
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 export default function Sign() {
+    let navigate = useNavigate();
     const [Email,setEmail] = useState('');
     const [password,setPassword] = useState('')
     const [loginData,setLoginData] = useState('');
     if(loginData !== ""){
-        localStorage.setItem("logindata",JSON.stringify(loginData))
+        localStorage.setItem("logindata",JSON.stringify(loginData));  
     }
     const loginHandler = (e)=>{
         e.preventDefault();
@@ -23,12 +25,29 @@ export default function Sign() {
     // Signed in
     var user = userCredential.user;
     console.log(user)
+    
     db.ref().child("users").child(user.uid).get().then((snapshot) => {
         if (snapshot.exists()) {
             setLoginData([snapshot.val()]
             )
-        } else {
-          console.log("No data available");
+            let userdata = JSON.parse(localStorage.getItem("logindata"))
+            if(userdata[0].type === "1"){
+                navigate('/Student')
+
+            }
+            else if(userdata[0].type === "2"){
+                navigate('/Company')
+
+            }
+
+            else if(userdata[0].type === "0"){
+                navigate('/Admin')
+
+            }
+        }
+         else {
+          alert("Please Login First")
+          navigate("/Signin")
         }
       }).catch((error) => {
         console.error(error);

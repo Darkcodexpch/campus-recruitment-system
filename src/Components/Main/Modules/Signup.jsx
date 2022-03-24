@@ -22,31 +22,14 @@ export default function Signup() {
                 email,
                 password,
                 type,
-                status
+                status,
             }
             auth.createUserWithEmailAndPassword(user.email, user.password)
                 .then((userCredential) => {
                     console.log(userCredential)
                     // Signed in 
-                    let uid = userCredential.user.uid
-                    // console.log("get Current Uid", uid)
-                    // if (user.type === "1") {
-                    //     db.ref('/').child('users/StudentData').child(uid).set(user)
-                    //     alert("Student Signup suuccessfully")
-                    //     setName(' ')
-                    //     setEmail(' ')
-                    //     setPassword(' ')
-                    //     setType(' ')
-                    // }
-                    // else if (user.type === "2") {
-                    //     db.ref('/').child('users/CompanyData').child(uid).set(user)
-                    //     alert("Company Signup suuccessfully")
-                    //     setName(' ')
-                    //     setEmail(' ')
-                    //     setPassword(' ')
-                    //     setType(' ')
-                    // }
-
+                     let uid = userCredential.user.uid
+                     user.uid = uid;
                     db.ref('/').child('users').child(uid).set(user)
                     alert("Signup succesfully")
                     setName('')
@@ -72,7 +55,6 @@ export default function Signup() {
 
                     <div className='col-lg-7'>
                         <form className='px-5 pt-5' onSubmit={formHandler}>
-                            {/* <h1 className='font-weight-bold py-3'>Logo</h1> */}
                             <h4 className='font-weight-bold py-3'>Sign up  for your Account</h4>
                             <div className='form-row'>
                                 <div className='col-lg-7'>

@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter,Navigate } from "react-router-dom"
+import { Routes, Route, BrowserRouter} from "react-router-dom"
 import Protected from "./Components/Protected"
 import MainContent from "./Components/Main/MainContent"
 import Sign from "./Components/Main/Modules/Sign"
@@ -7,8 +7,6 @@ import Admin from "./Components/Adminside/Admin"
 import Company from "./Components/Adminside/Company"
 import Student from "./Components/Main/Modules/Student"
 export default function Main() {
-  let storageData = localStorage.getItem("logindata");
-  console.log(storageData)
   return (
 
     <BrowserRouter>

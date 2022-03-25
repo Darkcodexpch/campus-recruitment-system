@@ -1,4 +1,5 @@
 import './Admin.css'
+import { Modal, Button } from 'react-bootstrap';
 import { db } from "../../Firebaseconf";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
@@ -30,23 +31,17 @@ export default function Admin() {
 
   const deleteStudentHandler = (id) => {
     db.ref("users").child(id).remove()
-    setStudentData(studentData.filter((elem, index)=>{ if (elem.data.uid!=id) return elem}))
+    setStudentData(studentData.filter((elem, index) => { if (elem.data.uid != id) return elem }))
     alert("Student Deleted Succesfully")
 
   }
-  const editStudentHandler = (id) => {
-    console.log("editStudent", id)
-  }
-  
   const deleteCompanyHandler = (id) => {
     db.ref("users").child(id).remove()
-    setCompanyData(companyData.filter((elem, index)=>{ if (elem.data.uid!=id) return elem }))
+    setCompanyData(companyData.filter((elem, index) => { if (elem.data.uid != id) return elem }))
     alert("Company Deleted Succesfully")
 
   }
-  const editCompanyHandler = (id) => {
-   
-  }
+
 
   const logOutHandler = () => {
     localStorage.removeItem("logindata");
@@ -54,8 +49,41 @@ export default function Admin() {
   }
 
   // searchstudent
-  const [searchStudent,setSearchStudent] = useState('')
-  const [searchCompany,setSearchCompany] = useState('')
+  const [searchStudent, setSearchStudent] = useState('')
+  const [searchCompany, setSearchCompany] = useState('')
+
+  // modal work
+  const [show, setShow] = useState(false)
+  const [studentshow, setstudentshow] = useState(false)
+  const handleShow = () => setShow(true)
+  const handleShowStudent = (id) =>{
+    setstudentshow(true)
+    console.log(id)
+  } 
+  const handleCloseStudent = () => setstudentshow(false)
+  const hanldeClose = () => setShow(false)
+  const [companyUpdatevalue, setcompanyUpdatevalue] = useState('')
+  const editCompanyHandler = (id) => {
+    db.ref("users").child(`${id}`).update({ name: companyUpdatevalue }).then(() => {
+      alert("Data Updated")
+      setcompanyUpdatevalue('');
+    })
+
+  }
+
+  const [studentUpdatename, setstudentUpdatename] = useState("");
+  const [semesterUpdatename, setsemesterUpdatename] = useState("");
+  const [githubUpdatename, setgithubUpdatename] = useState("");
+  const [cgpaUpdatename, setcgpaUpdatename] = useState("");
+  const [studentUpdatenameText, setstudentUpdatenameText] = useState('')
+  const editStudentHandler = (id) => {
+    db.ref("users").child(`${id}`).update({ name: studentUpdatenameText }).then(() => {
+      alert("Data Updated")
+      setstudentUpdatenameText('');
+    })
+
+  }
+
 
   return (
     <div className="container">
@@ -69,8 +97,8 @@ export default function Admin() {
       <div className='row mt-2'>
         <div className='col-md-12  shadow-sm bg-body rounded'>
           <h3 >Student Details</h3>
-          <input type="search" placeholder='Search student' className='form-control' style={{marginTop:10,marginBottom:10,width:"40%"}}
-          onChange={(e)=>{setSearchStudent(e.target.value)}}/>
+          <input type="search" placeholder='Search student' className='form-control' style={{ marginTop: 10, marginBottom: 10, width: "40%" }}
+            onChange={(e) => { setSearchStudent(e.target.value) }} />
           <table className='table'>
             <thead>
               <tr>
@@ -85,17 +113,17 @@ export default function Admin() {
               </tr>
             </thead>
             <tbody>
-              {studentData && studentData.filter((val)=>{
-                if(searchStudent===""){
+              {studentData && studentData.filter((val) => {
+                if (searchStudent === "") {
                   return val
                 }
-                else if(
-                  val?.data?.name &&  val?.data?.name.toLowerCase().includes(searchStudent.toLowerCase()) ||
-                  val?.data?.semester &&  val?.data?.semester.toLowerCase().includes(searchStudent.toLowerCase()) ||
-                  val?.data?.github &&  val?.data?.github.toLowerCase().includes(searchStudent.toLowerCase()) ||
-                  val?.data?.cgpa &&  val?.data?.cgpa.toLowerCase().includes(searchStudent.toLowerCase())
-                  
-                ){
+                else if (
+                  val?.data?.name && val?.data?.name.toLowerCase().includes(searchStudent.toLowerCase()) ||
+                  val?.data?.semester && val?.data?.semester.toLowerCase().includes(searchStudent.toLowerCase()) ||
+                  val?.data?.github && val?.data?.github.toLowerCase().includes(searchStudent.toLowerCase()) ||
+                  val?.data?.cgpa && val?.data?.cgpa.toLowerCase().includes(searchStudent.toLowerCase())
+
+                ) {
                   return val
                 }
               }).map((i, k) => {
@@ -107,7 +135,24 @@ export default function Admin() {
                   <td>{i.data.github}</td>
                   <td>{i.data.cgpa}</td>
                   <td><button className='btn btn-danger' onClick={() => deleteStudentHandler(i.data.uid)}>Delete</button></td>
-                  <td><button className='btn btn-primary' onClick={() => editStudentHandler(i.data.uid)}>Edit</button></td>
+                  <td><button className='btn btn-primary' onClick={()=>{handleShowStudent(i.data.uid)}}>Edit</button></td>
+                  <Modal show={studentshow} onHide={handleCloseStudent}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Update Student Details</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                      <input type="text" className='form-control' placeholder='Enter text to update' value={studentUpdatenameText} onChange={(e) => { setstudentUpdatenameText(e.target.value) }} />
+                      <input type="text" className='form-control' placeholder='Enter text to update' value={i.data.semester} onChange={(e) => { setsemesterUpdatename(e.target.value) }} />
+                      <input type="text" className='form-control' placeholder='Enter text to update' value={i.data.github} onChange={(e) => { setgithubUpdatename(e.target.value) }} />
+                      <input type="text" className='form-control' placeholder='Enter text to update' value={i.data.cgpa} onChange={(e) => { setcgpaUpdatename(e.target.value) }} />
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleCloseStudent}>Close</Button>
+                      <Button variant="primary" onClick={() => editStudentHandler(i.data.uid)}>Save changes</Button>
+                    </Modal.Footer>
+                  </Modal>
                 </tr>
 
               })
@@ -119,8 +164,8 @@ export default function Admin() {
 
 
         <div className='col-md-12 shadow-sm bg-body rounded mt-3'>
-        <input type="search" placeholder='Search CompanyData' className='form-control' style={{marginTop:10,marginBottom:10,width:"40%"}}
-          onChange={(e)=>{setSearchCompany(e.target.value)}}/>
+          <input type="search" placeholder='Search CompanyData' className='form-control' style={{ marginTop: 10, marginBottom: 10, width: "40%" }}
+            onChange={(e) => { setSearchCompany(e.target.value) }} />
           <h3>Company Details</h3>
           <table className='table'>
             <thead>
@@ -132,20 +177,34 @@ export default function Admin() {
               </tr>
             </thead>
             <tbody>
-              {companyData && companyData.filter((val)=>{
-                if(searchCompany === ""){
-                return val
+              {companyData && companyData.filter((val) => {
+                if (searchCompany === "") {
+                  return val
                 }
-                else if(val?.data?.name &&  val?.data?.name.toLowerCase().includes(searchCompany.toLowerCase()))
-                return{
-                  val
-                }
+                else if (val?.data?.name && val?.data?.name.toLowerCase().includes(searchCompany.toLowerCase()))
+                  return {
+                    val
+                  }
               }).map((i, k) => {
                 return <tr key={k}>
                   <th scope="row">{k + 1}</th>
                   <td>{i.data.name}</td>
                   <td><button className='btn btn-danger' onClick={() => deleteCompanyHandler(i.data.uid)}>Delete</button></td>
-                  <td><button className='btn btn-primary' onClick={() => editCompanyHandler(i.data.uid)}>Edit</button></td>
+                  <td><button className='btn btn-primary' onClick={handleShow}>Edit</button></td>
+                  <Modal show={show} onHide={hanldeClose}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Update Company Details</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                      <input type="text" className='form-control' placeholder='Enter text to update' value={companyUpdatevalue} onChange={(e) => { setcompanyUpdatevalue(e.target.value) }} />
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={hanldeClose}>Close</Button>
+                      <Button variant="primary" onClick={() => editCompanyHandler(i.data.uid)}>Save changes</Button>
+                    </Modal.Footer>
+                  </Modal>
                 </tr>
 
               })
@@ -153,7 +212,6 @@ export default function Admin() {
 
             </tbody>
           </table>
-
         </div>
 
       </div>

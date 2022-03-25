@@ -23,9 +23,7 @@ export default function Sign() {
  auth.signInWithEmailAndPassword(Email, password)
   .then((userCredential) => {
     // Signed in
-    var user = userCredential.user;
-    console.log(user)
-    
+    var user = userCredential.user;   
     db.ref().child("users").child(user.uid).get().then((snapshot) => {
         if (snapshot.exists()) {
             setLoginData([snapshot.val()]

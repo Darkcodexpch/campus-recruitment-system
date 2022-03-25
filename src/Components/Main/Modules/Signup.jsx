@@ -2,14 +2,13 @@ import './Signup.css'
 import img from '../../Header/Logo.png'
 import Header from '../../Header/Header'
 import { db, auth } from '../../../Firebaseconf'
-import { Link,useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 export default function Signup() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [type, setType] = useState('')
-    const [status,setStatus] = useState(false);
     const navigate = useNavigate()
     let formHandler = (e) => {
         e.preventDefault()
@@ -22,14 +21,12 @@ export default function Signup() {
                 email,
                 password,
                 type,
-                status,
             }
             auth.createUserWithEmailAndPassword(user.email, user.password)
                 .then((userCredential) => {
-                    console.log(userCredential)
                     // Signed in 
-                     let uid = userCredential.user.uid
-                     user.uid = uid;
+                    let uid = userCredential.user.uid
+                    user.uid = uid;
                     db.ref('/').child('users').child(uid).set(user)
                     alert("Signup succesfully")
                     setName('')
@@ -37,6 +34,17 @@ export default function Signup() {
                     setPassword('')
                     setType('')
                     navigate('/Signin')
+                    // if (user.type === "2") {
+                    //     db.ref('/').child('users').child(uid).set(user);
+                    //     db.ref('/').child('enrollment').child(uid).set(user);
+                    //     alert("Signup succesfully")
+                    //     setName('')
+                    //     setEmail('')
+                    //     setPassword('')
+                    //     setType('')
+                    //     navigate('/Signin')
+                    // }
+                    
                 })
                 .catch((error) => {
                     console.log(error.message)

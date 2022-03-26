@@ -29,24 +29,34 @@ export default function Admin() {
   }, [])
 
   const deleteStudentHandler = (id) => {
-    console.log("deleteStudent", id)
+    db.ref("users").child(id).remove()
+    setStudentData(studentData.filter((elem, index)=>{ if (elem.data.uid!=id) return elem}))
+    alert("Student Deleted Succesfully")
 
   }
   const editStudentHandler = (id) => {
     console.log("editStudent", id)
   }
+  
   const deleteCompanyHandler = (id) => {
-    console.log("deleteStudent", id)
+    db.ref("users").child(id).remove()
+    setCompanyData(companyData.filter((elem, index)=>{ if (elem.data.uid!=id) return elem }))
+    alert("Company Deleted Succesfully")
 
   }
   const editCompanyHandler = (id) => {
-    console.log("editStudent", id)
+   
   }
 
   const logOutHandler = () => {
     localStorage.removeItem("logindata");
     navigate('/Signin')
   }
+
+  // searchstudent
+  const [searchStudent,setSearchStudent] = useState('')
+  const [searchCompany,setSearchCompany] = useState('')
+
   return (
     <div className="container">
       <div className="row shadow-sm p-2 bg-body rounded">
@@ -59,6 +69,8 @@ export default function Admin() {
       <div className='row mt-2'>
         <div className='col-md-12  shadow-sm bg-body rounded'>
           <h3 >Student Details</h3>
+          <input type="search" placeholder='Search student' className='form-control' style={{marginTop:10,marginBottom:10,width:"40%"}}
+          onChange={(e)=>{setSearchStudent(e.target.value)}}/>
           <table className='table'>
             <thead>
               <tr>
@@ -73,7 +85,20 @@ export default function Admin() {
               </tr>
             </thead>
             <tbody>
-              {studentData && studentData.map((i, k) => {
+              {studentData && studentData.filter((val)=>{
+                if(searchStudent===""){
+                  return val
+                }
+                else if(
+                  val?.data?.name &&  val?.data?.name.toLowerCase().includes(searchStudent.toLowerCase()) ||
+                  val?.data?.semester &&  val?.data?.semester.toLowerCase().includes(searchStudent.toLowerCase()) ||
+                  val?.data?.github &&  val?.data?.github.toLowerCase().includes(searchStudent.toLowerCase()) ||
+                  val?.data?.cgpa &&  val?.data?.cgpa.toLowerCase().includes(searchStudent.toLowerCase())
+                  
+                ){
+                  return val
+                }
+              }).map((i, k) => {
                 return <tr key={k}>
                   <th scope="row">{k + 1}</th>
                   <td>{i.data.name}</td>
@@ -94,6 +119,8 @@ export default function Admin() {
 
 
         <div className='col-md-12 shadow-sm bg-body rounded mt-3'>
+        <input type="search" placeholder='Search CompanyData' className='form-control' style={{marginTop:10,marginBottom:10,width:"40%"}}
+          onChange={(e)=>{setSearchCompany(e.target.value)}}/>
           <h3>Company Details</h3>
           <table className='table'>
             <thead>
@@ -105,7 +132,15 @@ export default function Admin() {
               </tr>
             </thead>
             <tbody>
-              {companyData && companyData.map((i, k) => {
+              {companyData && companyData.filter((val)=>{
+                if(searchCompany === ""){
+                return val
+                }
+                else if(val?.data?.name &&  val?.data?.name.toLowerCase().includes(searchCompany.toLowerCase()))
+                return{
+                  val
+                }
+              }).map((i, k) => {
                 return <tr key={k}>
                   <th scope="row">{k + 1}</th>
                   <td>{i.data.name}</td>

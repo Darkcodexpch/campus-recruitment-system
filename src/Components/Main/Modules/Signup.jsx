@@ -1,4 +1,6 @@
 import './Signup.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import img from '../../Header/Logo.png'
 import Header from '../../Header/Header'
 import { db, auth } from '../../../Firebaseconf'
@@ -13,7 +15,15 @@ export default function Signup() {
     let formHandler = (e) => {
         e.preventDefault()
         if (name === '' || email === '' || password === '' || type === '') {
-            alert("Please enter Details Properly")
+            toast.error('Please Fill All fileds Correctly!', {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
         }
         else {
             let user = {
@@ -28,26 +38,38 @@ export default function Signup() {
                     let uid = userCredential.user.uid
                     user.uid = uid;
                     db.ref('/').child('users').child(uid).set(user)
-                    alert("Signup succesfully")
+                    toast.success('🦄 Signup Successfully', {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        });
                     setName('')
                     setEmail('')
                     setPassword('')
                     setType('')
                     navigate('/Signin')
-                    // if (user.type === "2") {
-                    //     db.ref('/').child('users').child(uid).set(user);
-                    //     db.ref('/').child('enrollment').child(uid).set(user);
-                    //     alert("Signup succesfully")
-                    //     setName('')
-                    //     setEmail('')
-                    //     setPassword('')
-                    //     setType('')
-                    //     navigate('/Signin')
-                    // }
-                    
                 })
                 .catch((error) => {
-                    console.log(error.message)
+                    if(error.code === "auth/email-already-in-use"){
+                         toast.error('Please try anoter email Current Email is already used by another User!', {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        });
+                        setName('')
+                        setEmail('')
+                        setPassword('')
+                        setType('')
+
+                    }
                 });
 
         }
@@ -106,6 +128,17 @@ export default function Signup() {
                 </div>
 
             </div>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
 
         </section></>
 

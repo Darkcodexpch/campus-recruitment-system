@@ -1,5 +1,7 @@
 import Header from '../../Header/Header'
 import './Sign.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link} from 'react-router-dom'
 import { db, auth } from '../../../Firebaseconf'
 import img from '../../Header/Logo.png'
@@ -17,7 +19,15 @@ export default function Sign() {
         e.preventDefault();
 
         if(Email==="" || password===""){
-            alert("Please Fill details properly")
+            toast.error('Please Fill All fileds Correctly!', {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
         }
         else{
  auth.signInWithEmailAndPassword(Email, password)
@@ -30,6 +40,7 @@ export default function Sign() {
             )
             let userdata = JSON.parse(localStorage.getItem("logindata"))
             if(userdata[0].type === "1"){
+                
                 navigate('/Student')
 
             }
@@ -49,16 +60,39 @@ export default function Sign() {
         }
       }).catch((error) => {
         console.error(error);
+        
       });
     // ...
   })
   .catch((error) => {
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    console.log(errorCode,errorMessage)
-  });
-            setEmail('');
-            setPassword('');
+      console.log(error.code)
+    if(error.code === "auth/user-not-found"){
+        toast.error('There is no user record corresponding to this identifier. The user may have been deleted', {
+       position: "top-center",
+       autoClose: 3000,
+       hideProgressBar: false,
+       closeOnClick: true,
+       pauseOnHover: true,
+       draggable: true,
+       progress: undefined,
+       });
+       setEmail('');
+       setPassword('');
+   }
+   else if(error.code === "auth/wrong-password"){
+    toast.error('Its looks like you enter wrong password please type correct password', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+        setPassword('');
+
+   }
+  });  
             
         }
     }
@@ -97,6 +131,18 @@ export default function Sign() {
                 </div>
 
             </div>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+
 
         </section></>
     )

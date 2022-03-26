@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { db } from "../../Firebaseconf";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
+import { upload } from '@testing-library/user-event/dist/upload';
 export default function Admin() {
   let navigate = useNavigate();
   const [studentData, setStudentData] = useState('');
@@ -55,35 +56,62 @@ export default function Admin() {
   // modal work
   const [show, setShow] = useState(false)
   const [studentshow, setstudentshow] = useState(false)
-  const handleShow = () => setShow(true)
-  const handleShowStudent = (id) =>{
-    setstudentshow(true)
-    console.log(id)
-  } 
   const handleCloseStudent = () => setstudentshow(false)
   const hanldeClose = () => setShow(false)
-  const [companyUpdatevalue, setcompanyUpdatevalue] = useState('')
-  const editCompanyHandler = (id) => {
-    db.ref("users").child(`${id}`).update({ name: companyUpdatevalue }).then(() => {
+  const [companyUpdatevaluedata, setCompanyUpdatevaluedata] = useState('')
+  const [newCompanynameid,setNewCompanynameid] = useState('')
+  const [newCompanyname,setNewCompanyname] = useState('')
+  const handleShow = (data) => {
+    setCompanyUpdatevaluedata(data)
+    setNewCompanynameid(data.uid);
+    setNewCompanyname(data.name)
+    setShow(true)
+  
+  }
+
+  const editCompanyHandler = () => {
+    db.ref("users").child(`${newCompanynameid}`).update({ name: newCompanyname }).then(() => {
       alert("Data Updated")
-      setcompanyUpdatevalue('');
+      setNewCompanyname('')
+      setShow(false)
+      
     })
 
   }
-
-  const [studentUpdatename, setstudentUpdatename] = useState("");
-  const [semesterUpdatename, setsemesterUpdatename] = useState("");
-  const [githubUpdatename, setgithubUpdatename] = useState("");
-  const [cgpaUpdatename, setcgpaUpdatename] = useState("");
-  const [studentUpdatenameText, setstudentUpdatenameText] = useState('')
-  const editStudentHandler = (id) => {
-    db.ref("users").child(`${id}`).update({ name: studentUpdatenameText }).then(() => {
-      alert("Data Updated")
-      setstudentUpdatenameText('');
-    })
+  const [studentname,setStudentname] = useState('');
+  const [studentsemester,setStudentsemester] = useState('');
+  const [studentgithub,setStudentgithub] = useState('');
+  const [studentnamecgpa,setStudentcgpa] = useState('');
+  const [studentid, setstudentid] = useState({});
+  const handleShowStudent = (data) =>{
+    setstudentid(data.uid)
+    setStudentname(data.name)
+    setStudentsemester(data.semester)
+    setStudentgithub(data.github)
+    setStudentcgpa(data.cgpa)
+    setstudentshow(true)
 
   }
+  
+const editStudentHandler = () => {
+ db.ref("users").child(`${studentid}`).update({ 
+   name: studentname,
+   semester: studentsemester,
+   github:studentgithub,
+   cgpa:studentnamecgpa
 
+  }).then(() => {
+      alert("Data Updated")
+      setStudentname("")
+      setStudentsemester("")
+      setStudentgithub("")
+      setStudentcgpa("")
+      setstudentshow(false)
+    })
+    console.log(studentid)
+  
+  
+  }
 
   return (
     <div className="container">
@@ -135,24 +163,7 @@ export default function Admin() {
                   <td>{i.data.github}</td>
                   <td>{i.data.cgpa}</td>
                   <td><button className='btn btn-danger' onClick={() => deleteStudentHandler(i.data.uid)}>Delete</button></td>
-                  <td><button className='btn btn-primary' onClick={()=>{handleShowStudent(i.data.uid)}}>Edit</button></td>
-                  <Modal show={studentshow} onHide={handleCloseStudent}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>Update Student Details</Modal.Title>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                      <input type="text" className='form-control' placeholder='Enter text to update' value={studentUpdatenameText} onChange={(e) => { setstudentUpdatenameText(e.target.value) }} />
-                      <input type="text" className='form-control' placeholder='Enter text to update' value={i.data.semester} onChange={(e) => { setsemesterUpdatename(e.target.value) }} />
-                      <input type="text" className='form-control' placeholder='Enter text to update' value={i.data.github} onChange={(e) => { setgithubUpdatename(e.target.value) }} />
-                      <input type="text" className='form-control' placeholder='Enter text to update' value={i.data.cgpa} onChange={(e) => { setcgpaUpdatename(e.target.value) }} />
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                      <Button variant="secondary" onClick={handleCloseStudent}>Close</Button>
-                      <Button variant="primary" onClick={() => editStudentHandler(i.data.uid)}>Save changes</Button>
-                    </Modal.Footer>
-                  </Modal>
+                  <td><button className='btn btn-primary' onClick={()=>{handleShowStudent(i.data)}}>Edit</button></td>
                 </tr>
 
               })
@@ -190,31 +201,49 @@ export default function Admin() {
                   <th scope="row">{k + 1}</th>
                   <td>{i.data.name}</td>
                   <td><button className='btn btn-danger' onClick={() => deleteCompanyHandler(i.data.uid)}>Delete</button></td>
-                  <td><button className='btn btn-primary' onClick={handleShow}>Edit</button></td>
-                  <Modal show={show} onHide={hanldeClose}>
+                  <td><button className='btn btn-primary' onClick={()=>handleShow(i.data)}>Edit</button></td>
+                </tr>
+
+              })
+              }
+            </tbody>
+          </table>
+
+          <Modal show={show} onHide={hanldeClose}>
                     <Modal.Header closeButton>
                       <Modal.Title>Update Company Details</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>
-                      <input type="text" className='form-control' placeholder='Enter text to update' value={companyUpdatevalue} onChange={(e) => { setcompanyUpdatevalue(e.target.value) }} />
+                      <input type="text" className='form-control' placeholder='Enter text to update' value={newCompanyname}  onChange={(e) => { setNewCompanyname(e.target.value) }} />
                     </Modal.Body>
 
                     <Modal.Footer>
                       <Button variant="secondary" onClick={hanldeClose}>Close</Button>
-                      <Button variant="primary" onClick={() => editCompanyHandler(i.data.uid)}>Save changes</Button>
+                      <Button variant="primary" onClick={editCompanyHandler}>Save changes</Button>
                     </Modal.Footer>
                   </Modal>
-                </tr>
-
-              })
-              }
-
-            </tbody>
-          </table>
         </div>
 
       </div>
+      <Modal show={studentshow} onHide={handleCloseStudent}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Update Student Details</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                      <input type="text" className='form-control my-2' placeholder='Enter name to update' value={studentname} onChange={(e) => { setStudentname(e.target.value) }} />
+                      <input type="text" className='form-control my-2' value={studentsemester} placeholder='Enter semester to update' onChange={(e) => { setStudentsemester(e.target.value) }}/>
+                      <input type="text" className='form-control my-2' value={studentgithub} placeholder='Enter github url to update' onChange={(e) => { setStudentgithub(e.target.value) }}/>
+                      <input type="text" className='form-control my-2' value={studentnamecgpa} placeholder='Enter cgpa to update' onChange={(e) => { setStudentcgpa(e.target.value) }}/>
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleCloseStudent}>Close</Button>
+                      <Button variant="primary" onClick={editStudentHandler}>Save changes</Button>
+                    </Modal.Footer>
+                  </Modal>
+                
     </div>
   )
 }
